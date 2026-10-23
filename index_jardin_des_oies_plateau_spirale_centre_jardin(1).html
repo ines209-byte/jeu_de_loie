@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Le Jardin des Oies — version 3 fiable</title>
+<style>
+
+:root{
+ --blue:#8b5cf6;--green:#14b8a6;--yellow:#ffe066;--orange:#ff8a65;
+ --red:#ff4f87;--cream:#fff8fc;--ink:#352344;--line:#f4b8d5;
+ --pink:#ec4899;--purple:#8b5cf6;--shadow:0 12px 32px rgba(91,35,87,.12)
+}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(ellipse at 10% 0%,#ffd7eb 0,transparent 35%),radial-gradient(ellipse at 90% 15%,#ddd6fe 0,transparent 32%),linear-gradient(135deg,#fff5fb,#f5f0ff 65%,#edfffb);color:var(--ink);font:16px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif;min-height:100vh}
+header{position:relative;overflow:hidden;padding:26px 18px 24px;text-align:center;background:linear-gradient(115deg,#f9a8d4,#fce7f3 46%,#c4b5fd);border-bottom:4px solid #f472b6}
+header:before,header:after{content:"";position:absolute;border-radius:50%;background:#ffffff55;pointer-events:none}
+header:before{width:180px;height:180px;left:-55px;top:-95px}
+header:after{width:230px;height:230px;right:-75px;bottom:-160px}
+h1{position:relative;margin:0;color:#86198f;text-shadow:0 3px 0 #ffffffaa;font-size:clamp(1.9rem,5vw,3.2rem);letter-spacing:-1px}
+header p{position:relative;margin:7px 0 0;color:#66336c;font-weight:650}
+main{max-width:1500px;margin:auto;padding:18px;display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:18px;align-items:start}
+.panel{background:rgba(255,255,255,.88);backdrop-filter:blur(8px);border:1px solid #f0b9dc;border-radius:20px;padding:16px;box-shadow:var(--shadow);min-width:0}
+h2{font-size:1.12rem;margin:0 0 12px;color:#9d174d;display:flex;align-items:center;gap:8px}
+.row{display:flex;gap:9px;align-items:center;flex-wrap:wrap}
+label{font-weight:650}
+input,select,button{font:inherit;border-radius:12px;border:1px solid #e5c5dc;padding:10px 12px}
+input,select{background:#fffafd;color:var(--ink)}
+input:focus,select:focus,button:focus-visible{outline:3px solid #c4b5fd;outline-offset:2px}
+button{cursor:pointer;background:linear-gradient(135deg,#ec4899,#a855f7);color:white;border:0;box-shadow:0 4px 0 #86198f,0 7px 16px #a855f733;font-weight:800;transition:transform .15s,filter .15s,box-shadow .15s}
+button:hover:not(:disabled){transform:translateY(-2px);filter:saturate(1.15);box-shadow:0 6px 0 #86198f,0 10px 20px #a855f733}
+button:active:not(:disabled){transform:translateY(2px);box-shadow:0 1px 0 #86198f}
+button.secondary{background:#fff;color:#a21caf;border:1px solid #e9a8d4;box-shadow:0 3px 0 #e9a8d4}
+button:disabled{opacity:.45;cursor:not-allowed;box-shadow:none}
+#nameFields{margin-top:12px;gap:8px}
+#nameFields label{background:#fff4fa;border:1px solid #f6c5df;padding:7px 9px;border-radius:12px;font-size:.9rem}
+#nameFields input{width:125px!important;padding:7px 9px}
+#board{display:grid;grid-template-columns:repeat(11,minmax(0,1fr));grid-template-rows:repeat(9,minmax(42px,auto));gap:5px;margin-top:16px;padding:10px;border-radius:18px;background:linear-gradient(135deg,#fff0f8,#f1edff 55%,#e5fff8);border:1px solid #f3c2df;box-shadow:inset 0 2px 12px #a855f710}
+#center-garden{grid-row:3 / 8;grid-column:3 / 10;align-self:stretch;justify-self:stretch;z-index:0;pointer-events:none;display:flex;align-items:center;justify-content:center;text-align:center;min-width:0;min-height:0;border:2px dashed #83b985;border-radius:46% 46% 40% 40%;background:radial-gradient(ellipse at center,#e9ffd9 0%,#c8efb6 55%,#a6d89c 100%);box-shadow:inset 0 0 0 7px #ffffff55,inset 0 0 18px #4d8e4b33;overflow:hidden}
+#center-garden .garden-art{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;color:#315c36;font-weight:900;text-shadow:0 1px #ffffffaa;padding:5px}
+#center-garden .garden-geese{font-size:clamp(1.5rem,4vw,3.5rem);line-height:1.1;letter-spacing:.08em}
+#center-garden .garden-title{font-size:clamp(.65rem,1.6vw,1.2rem);letter-spacing:.08em;text-transform:uppercase}
+#center-garden .garden-subtitle{font-size:clamp(.55rem,1.1vw,.8rem);font-weight:700}
+.cell{min-width:0;min-height:76px;border:1px solid #edc4dc;border-radius:12px;background:linear-gradient(145deg,#ffe4f1,#ffd8eb);padding:5px;display:flex;flex-direction:column;justify-content:space-between;align-items:center;position:relative;transition:transform .15s,box-shadow .15s;overflow:hidden}
+.cell:hover{transform:translateY(-2px);box-shadow:0 5px 12px #6d326322;z-index:1}
+.cell:nth-child(4n){background:linear-gradient(145deg,#d8fff4,#bdf5e7);border-color:#a7e9da}
+.cell.special{background:linear-gradient(145deg,#ede4ff,#dcd0ff);border-color:#c4b5fd}
+.cell.start{background:linear-gradient(145deg,#bbf7d0,#6ee7b7);border:2px solid #34d399}
+.cell.finish{background:linear-gradient(145deg,#fbcfe8,#f9a8d4);border:2px solid #ec4899}
+.cell.last{outline:4px solid #f72585;outline-offset:-4px;box-shadow:0 0 0 3px #ffffffaa inset}
+.num{align-self:flex-start;font-size:.72rem;font-weight:900;color:#6b315e;background:#ffffffa8;border-radius:6px;padding:1px 5px}
+.symbol{font-size:clamp(1rem,2vw,1.45rem);line-height:1.1;filter:drop-shadow(0 2px 1px #ffffff99)}
+.pawns{display:flex;gap:2px;flex-wrap:wrap;justify-content:center;min-height:19px;max-width:100%}
+.pawn{width:21px;height:21px;border:2px solid white;border-radius:50%;color:white;font-size:.65rem;font-weight:900;display:inline-flex;align-items:center;justify-content:center;box-shadow:0 2px 4px #0003;animation:pop-in .25s ease-out}
+@keyframes pop-in{from{transform:scale(.4)}to{transform:scale(1)}}
+.side{display:grid;gap:14px;align-content:start}
+.status{background:linear-gradient(120deg,#ffe0ef,#e8ddff);border:1px solid #f2a6d0;border-radius:14px;padding:13px;font-weight:750}
+.dice{font-size:2.8rem;text-align:center;letter-spacing:8px;margin:8px 0;text-shadow:0 3px 0 #fbcfe8;min-height:58px}
+#rollResult{padding:5px;text-align:center!important}
+#rollBtn{font-size:1.05rem;padding:13px}
+.muted{font-size:.84rem;color:#74657d}
+#players,#hand{display:grid;gap:8px}
+.player{display:grid;grid-template-columns:13px minmax(0,1fr) auto;gap:9px;align-items:center;padding:10px;border:1px solid #f0d9e7;border-radius:12px;background:#fffafd}
+.player.active{border:2px solid #ec4899;background:linear-gradient(100deg,#ffe0f0,#f2e8ff);box-shadow:0 0 0 3px #f9a8d455}
+.dot{width:13px;height:13px;border-radius:50%;box-shadow:0 0 0 3px #fff,0 1px 4px #0003}
+.card{border:1px solid #d8a4f5;background:linear-gradient(135deg,#fff0f7,#eee7ff);border-radius:13px;padding:11px}
+.card strong{display:block;color:#86198f}
+.card button{margin-top:8px;padding:7px 10px;font-size:.85rem}
+#log{margin:0;padding-left:22px;max-height:190px;overflow:auto;font-size:.88rem}
+#log li{padding:4px 0;border-bottom:1px dashed #f0d9e7}
+.rulegrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.rulegrid label{font-size:.85rem;background:#fff6fb;border:1px solid #f3d4e5;border-radius:10px;padding:8px}
+.rulegrid input,.rulegrid select{width:100%;margin-top:5px}
+details summary{cursor:pointer;font-weight:800;color:#9d174d;padding:4px}
+details .muted{line-height:1.5}
+.test-ok{color:#176b3a}.test-fail{color:#a32222}
+.notice{padding:10px;border-radius:10px;background:#fff1d7;margin-top:8px}
+footer{text-align:center;color:#78657e;font-size:.82rem;padding:0 18px 22px}
+@media(max-width:980px){main{grid-template-columns:1fr}.side{grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}}
+@media(max-width:600px){main{padding:8px;gap:10px}.panel{padding:10px;border-radius:15px}#board{gap:2px;padding:4px}.cell{min-height:51px;padding:2px;border-radius:6px}.num{font-size:.58rem;padding:0 3px}.symbol{font-size:.88rem}.pawn{width:15px;height:15px;font-size:.53rem;border-width:1px}.pawns{min-height:15px}.rulegrid{grid-template-columns:1fr}header{padding:20px 10px}#nameFields input{width:105px!important}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
+
+</style></head>
+<body>
+<header><h1>🪿 Le Jardin des Oies</h1><p>Un jeu plein de surprises — lance les dés, joue tes cartes et fonce vers la case 63 !</p></header>
+<main>
+<section class="panel">
+<div class="row"><label for="count">Joueurs :</label><select id="count"><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option></select><button id="setupBtn">Configurer</button><button id="startBtn" disabled>Démarrer</button><button id="newBtn" class="secondary">Nouvelle partie</button></div>
+<div id="nameFields" class="row" style="margin-top:9px"></div><div id="board" aria-label="Plateau de 63 cases"></div><p class="muted" style="margin:10px 4px 0">Parcourez les 63 cases, surveillez les cases spéciales et soyez le premier à atteindre l’arrivée.</p>
+<details class="panel" style="margin-top:12px"><summary>⚙️ Règles personnalisables</summary><div class="rulegrid">
+<label>Pont — destination<input id="bridgeDest" type="number" min="1" max="63" value="12"></label>
+<label>Hôtel — tours perdus<input id="hotelTurns" type="number" min="1" max="5" value="1"></label>
+<label>Puits — tours bloqués<input id="wellTurns" type="number" min="1" max="10" value="2"></label>
+<label>Labyrinthe — destination<input id="mazeDest" type="number" min="1" max="63" value="30"></label>
+<label>Prison — tours perdus<input id="prisonTurns" type="number" min="1" max="5" value="2"></label>
+<label>Oies<select id="gooseRule"><option value="repeat">Avancer encore du résultat</option><option value="none">Sans effet supplémentaire</option></select></label>
+</div><p class="muted">Cases : oies 9, 18, 27, 36, 45, 54 ; pont 6 ; hôtel 19 ; puits 31 ; labyrinthe 42 ; prison 52 ; tête de mort 58. Variante de règles modifiable.</p></details>
+</section>
+<aside class="side">
+<section class="panel"><h2>🎲 Tour de jeu</h2><div id="status" class="status" aria-live="polite">Configurez les joueurs, puis démarrez.</div><div id="dice" class="dice">⚀ ⚀</div><div id="rollResult" class="muted" style="text-align:center">Deux dés à six faces</div><button id="rollBtn" style="width:100%;margin-top:8px" disabled>Lancer les dés</button><div class="row" style="margin-top:8px"><button id="saveBtn" class="secondary">Sauvegarder</button><button id="loadBtn" class="secondary">Reprendre</button></div></section>
+<section class="panel"><h2>Joueurs et positions</h2><div id="players"></div></section>
+<section class="panel"><h2>🃏 Cartes d’action</h2><p class="muted">Jouables avant le lancer du tour actif.</p><div id="hand"></div></section>
+<section class="panel"><h2>Historique</h2><ol id="log"><li>La partie n’a pas encore commencé.</li></ol></section>
+</aside></main><footer>Local uniquement : aucune donnée n’est envoyée en ligne. Sauvegarde dans le stockage local du navigateur.</footer>
+<script>
+(()=>{"use strict";
+const $=id=>document.getElementById(id), colors=["#e74c3c","#3498db","#2ecc71","#f1c40f","#e67e22","#9b59b6","#1abc9c","#34495e","#e84393","#795548"], faces=["⚀","⚁","⚂","⚃","⚄","⚅"];
+const special={6:"🌉",9:"🪿",18:"🪿",19:"🏨",27:"🪿",31:"🕳️",36:"🪿",42:"🌀",45:"🪿",52:"🔒",54:"🪿",58:"💀",63:"🏁"};
+const cardTemplates=[{name:"Coup de pouce",desc:"Avancez de 3 cases.",type:"move",value:3},{name:"Marche arrière",desc:"Reculez de 2 cases.",type:"move",value:-2},{name:"Bouclier",desc:"Annule un effet négatif de case.",type:"shield"},{name:"Échange",desc:"Échangez votre position avec le joueur suivant.",type:"swap"},{name:"Recul du troupeau",desc:"Reculez d’autant de cases qu’il y a de joueurs.",type:"playersBack"}];
+let players=[],active=0,started=false,ended=false,rolled=false,lastCell=null,cardId=0,turnSerial=0;
+function randInt(min,max){if(max<min)throw Error("Intervalle aléatoire invalide");if(globalThis.crypto?.getRandomValues){const range=max-min+1,limit=Math.floor(4294967296/range)*range;let x;do{x=crypto.getRandomValues(new Uint32Array(1))[0]}while(x>=limit);return min+(x%range)}return min+Math.floor(Math.random()*(max-min+1))}
+function validState(ps=players){if(!Array.isArray(ps)||ps.length<2||ps.length>10)return false;return ps.every(p=>typeof p.name==="string"&&p.name.trim().length>0&&Number.isInteger(p.pos)&&p.pos>=1&&p.pos<=63&&Number.isInteger(p.skip)&&p.skip>=0&&Number.isInteger(p.well)&&p.well>=0&&typeof p.shield==="boolean"&&Array.isArray(p.hand))}
+function assertState(){if(!validState())throw Error("État de jeu incohérent : partie interrompue pour éviter une corruption.");if(!Number.isInteger(active)||active<0||active>=players.length)throw Error("Joueur actif invalide.");}
+function clampPos(n){return Math.max(1,Math.min(63,Math.trunc(n)))}
+function pos(n){
+ // Parcours en spirale continue sur une grille de 11 colonnes et 9 lignes.
+ const path=[];
+ let top=0,bottom=8,left=0,right=10;
+ while(top<=bottom && left<=right && path.length<63){
+   for(let c=left;c<=right && path.length<63;c++) path.push({row:top,col:c});
+   top++;
+   for(let r=top;r<=bottom && path.length<63;r++) path.push({row:r,col:right});
+   right--;
+   for(let c=right;c>=left && path.length<63 && top<=bottom;c--) path.push({row:bottom,col:c});
+   bottom--;
+   for(let r=bottom;r>=top && path.length<63 && left<=right;r--) path.push({row:r,col:left});
+   left++;
+ }
+ return path[n-1];
+}
+function makeBoard(){let b=$("board");b.innerHTML="";for(let n=1;n<=63;n++){let c=document.createElement("div");c.id="cell"+n;c.className="cell"+(special[n]?" special":"")+(n===1?" start":"")+(n===63?" finish":"");let a=document.createElement("span");a.className="num";a.textContent=n;let s=document.createElement("span");s.className="symbol";s.textContent=special[n]||"";let p=document.createElement("div");p.className="pawns";p.id="pawns"+n;let q=pos(n);c.style.gridRow=q.row+1;c.style.gridColumn=q.col+1;c.title="Case "+n;c.append(a,s,p);b.append(c)}let garden=document.createElement("div");garden.id="center-garden";garden.setAttribute("aria-hidden","true");garden.innerHTML='<div class="garden-art"><div class="garden-geese">🌳 🪿 🌼</div><div class="garden-title">Le Jardin des Oies</div><div class="garden-subtitle">🌷 Un petit coin de nature 🌷</div></div>';b.append(garden)}
+function say(t){let l=$("log");if(l.children.length===1&&l.firstElementChild.textContent.includes("pas encore"))l.innerHTML="";let li=document.createElement("li");li.textContent=t;l.prepend(li)}
+function move(p,steps){if(!Number.isInteger(steps))throw Error("Déplacement non entier");let target=p.pos+steps;if(target>63)target=63-(target-63);if(target<1)target=1;p.pos=clampPos(target);lastCell=p.pos;return p.pos}
+function getRule(id,min,max,def){let n=Number($(id).value);if(!Number.isInteger(n)||n<min||n>max){$(id).value=def;return def}return n}
+function specialEffect(p,roll,chain=0){if(chain>10)return;if(p.pos===63){ended=true;active=players.indexOf(p);say("🏆 "+p.name+" gagne en atteignant exactement la case 63 !");return}
+if(p.shield&&[19,31,42,52,58].includes(p.pos)){p.shield=false;say(p.name+" utilise son bouclier : effet négatif annulé.");return}
+if([9,18,27,36,45,54].includes(p.pos)&&$("gooseRule").value==="repeat"){say("🪿 "+p.name+" arrive sur une oie et avance encore de "+roll+".");move(p,roll);specialEffect(p,roll,chain+1);return}
+if(p.pos===6){p.pos=getRule("bridgeDest",1,63,12);lastCell=p.pos;say("🌉 Pont : "+p.name+" va en case "+p.pos+".");specialEffect(p,roll,chain+1)}
+else if(p.pos===19){p.skip=getRule("hotelTurns",1,5,1);say("🏨 Hôtel : "+p.name+" perd "+p.skip+" tour(s).")}
+else if(p.pos===31){p.well=getRule("wellTurns",1,10,2);say("🕳️ Puits : "+p.name+" est bloqué pour "+p.well+" tour(s).")}
+else if(p.pos===42){p.pos=getRule("mazeDest",1,63,30);lastCell=p.pos;say("🌀 Labyrinthe : retour en case "+p.pos+".");specialEffect(p,roll,chain+1)}
+else if(p.pos===52){p.skip=getRule("prisonTurns",1,5,2);say("🔒 Prison : "+p.name+" perd "+p.skip+" tour(s).")}
+else if(p.pos===58){p.pos=1;lastCell=1;say("💀 Tête de mort : "+p.name+" retourne au départ.")}
+}
+function render(){for(let n=1;n<=63;n++){let e=$("pawns"+n);if(e)e.innerHTML="";let c=$("cell"+n);if(c)c.classList.toggle("last",n===lastCell)}
+players.forEach((p,i)=>{let el=document.createElement("span");el.className="pawn";el.style.background=p.color;el.textContent=i+1;el.title=p.name+" — case "+p.pos;$("pawns"+p.pos).append(el)});
+$("players").innerHTML="";players.forEach((p,i)=>{let d=document.createElement("div");d.className="player"+(started&&!ended&&i===active?" active":"");let dot=document.createElement("span");dot.className="dot";dot.style.background=p.color;let text=document.createElement("span"),strong=document.createElement("strong"),small=document.createElement("small"),tag=document.createElement("b");strong.textContent=p.name;small.className="muted";small.textContent="Position : "+p.pos+(p.skip+p.well>0?" • bloqué":"");text.append(strong,document.createElement("br"),small);tag.textContent=started&&!ended&&i===active?"▶":"";d.append(dot,text,tag);$("players").append(d)});
+$("status").textContent=ended?"🏆 "+players[active].name+" a gagné !":started?`Au tour de ${players[active].name}${rolled?" — lancer effectué":""}.`:"Configurez les joueurs, puis démarrez.";
+$("rollBtn").disabled=!started||ended||rolled;renderHand()}
+function renderHand(){let h=$("hand");h.innerHTML="";if(!started||!players[active]){h.textContent="Les cartes apparaîtront au démarrage.";return}let p=players[active];if(!p.hand.length){h.textContent="Aucune carte en main.";return}p.hand.forEach((c,i)=>{let d=document.createElement("div");d.className="card";let s=document.createElement("strong");s.textContent=c.name;let desc=document.createElement("div");desc.className="muted";desc.textContent=c.desc;let b=document.createElement("button");b.textContent="Jouer";b.disabled=rolled;b.onclick=()=>useCard(i);d.append(s,desc,b);h.append(d)})}
+function setup(){let n=+$("count").value;$("nameFields").innerHTML="";for(let i=0;i<n;i++){let l=document.createElement("label");l.textContent="Joueur "+(i+1)+" ";let inp=document.createElement("input");inp.id="name"+i;inp.value=["Alice","Bastien","Chloé","David"][i]||"Joueur "+(i+1);inp.maxLength=22;inp.style.width="140px";l.append(inp);$("nameFields").append(l)}$("startBtn").disabled=false}
+function start(){let n=+$("count").value;players=Array.from({length:n},(_,i)=>({name:($("name"+i)?.value.trim()||"Joueur "+(i+1)),color:colors[i],pos:1,skip:0,well:0,shield:false,hand:[]}));players.forEach(p=>{for(let i=0;i<3;i++)p.hand.push({...cardTemplates[randInt(0,cardTemplates.length-1)],id:++cardId})});active=0;started=true;ended=false;rolled=false;lastCell=1;turnSerial=0;$("log").innerHTML="";say("Partie démarrée avec "+n+" joueurs.");render()}
+function endTurn(){rolled=false;active=(active+1)%players.length;turnSerial++;render()}
+function roll(){try{assertState();if(!started||ended||rolled)return;rolled=true;let p=players[active];if(p.well>0){p.well--;say(p.name+" reste bloqué au puits. Blocages restants : "+p.well+".");render();setTimeout(()=>{if(started&&!ended&&rolled)endTurn()},450);return}if(p.skip>0){p.skip--;say(p.name+" passe son tour. Tours perdus restants : "+p.skip+".");render();setTimeout(()=>{if(started&&!ended&&rolled)endTurn()},450);return}
+let a=randInt(1,6),b=randInt(1,6),sum=a+b;$("dice").textContent=faces[a-1]+" "+faces[b-1];$("rollResult").textContent=`${a} + ${b} = ${sum}`;let old=p.pos;move(p,sum);say(`${p.name} lance ${a} et ${b} (total ${sum}) : ${old} → ${p.pos}.`);specialEffect(p,sum);assertState();render();if(!ended)setTimeout(()=>{if(started&&!ended&&rolled)endTurn()},650)}catch(e){alert(e.message);$("rollBtn").disabled=true}}
+function useCard(i){try{assertState();if(!started||ended||rolled)return;let p=players[active],c=p.hand[i];if(!c)return;if(c.type==="move"){let old=p.pos;move(p,c.value);say(p.name+" joue "+c.name+" : "+old+" → "+p.pos+".");specialEffect(p,Math.abs(c.value))}
+else if(c.type==="shield"){p.shield=true;say(p.name+" active un bouclier.")}
+else if(c.type==="swap"){let other=players[(active+1)%players.length];[p.pos,other.pos]=[other.pos,p.pos];lastCell=p.pos;say(p.name+" échange sa position avec "+other.name+".")}
+else if(c.type==="playersBack"){let steps=players.length,old=p.pos;move(p,-steps);say("🐾 "+p.name+" joue Recul du troupeau et recule de "+steps+" cases (nombre de joueurs) : "+old+" → "+p.pos+".");specialEffect(p,2)}
+p.hand.splice(i,1);assertState();render()}catch(e){alert(e.message)}}
+function save(){if(!started){alert("Aucune partie à sauvegarder.");return}try{assertState();let data={version:3,players,active,started,ended,rolled,lastCell,turnSerial,settings:Object.fromEntries(["bridgeDest","hotelTurns","wellTurns","mazeDest","prisonTurns","gooseRule"].map(k=>[k,$(k).value])),log:[...$("log").children].map(x=>x.textContent)};localStorage.setItem("jardinOieSaveV3",JSON.stringify(data));say("Partie sauvegardée sur cet appareil.")}catch(e){alert("Sauvegarde impossible : "+e.message)}}
+function load(){let raw=localStorage.getItem("jardinOieSaveV3");if(!raw){alert("Aucune sauvegarde trouvée.");return}try{let s=JSON.parse(raw);if(s.version!==3||!validState(s.players)||!Number.isInteger(s.active)||s.active<0||s.active>=s.players.length||typeof s.started!=="boolean"||typeof s.ended!=="boolean")throw Error("Format ou données invalides");players=s.players;active=s.active;started=s.started;ended=s.ended;rolled=!!s.rolled;lastCell=Number.isInteger(s.lastCell)&&s.lastCell>=1&&s.lastCell<=63?s.lastCell:null;turnSerial=Number.isInteger(s.turnSerial)?s.turnSerial:0;Object.entries(s.settings||{}).forEach(([k,v])=>{if($(k))$(k).value=v});$("count").value=players.length;$("startBtn").disabled=true;$("nameFields").innerHTML="";$("log").innerHTML="";(s.log||[]).slice(0,100).reverse().forEach(t=>{let li=document.createElement("li");li.textContent=t;$("log").append(li)});assertState();render();say("Sauvegarde reprise.")}catch(e){alert("Sauvegarde refusée : "+e.message)}}
+function reset(){if(started&&!ended&&!confirm("Abandonner la partie et recommencer ?"))return;players=[];active=0;started=false;ended=false;rolled=false;lastCell=null;$("nameFields").innerHTML="";$("startBtn").disabled=true;$("dice").textContent="⚀ ⚀";$("rollResult").textContent="Deux dés à six faces";$("log").innerHTML="<li>La partie n’a pas encore commencé.</li>";render()}
+$("setupBtn").onclick=setup;$("startBtn").onclick=start;$("rollBtn").onclick=roll;$("newBtn").onclick=reset;$("saveBtn").onclick=save;$("loadBtn").onclick=load;makeBoard();render();
+})();
+</script></body></html>
